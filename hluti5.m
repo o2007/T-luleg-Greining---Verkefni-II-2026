@@ -1,7 +1,6 @@
-% Hluti 5 -- Hreyfimynd
 clear; clc;
 disp('');
-disp('Liður 5:');
+disp('Hluti 5:');
 
 x = @(t) 0.5 + 0.3*t + 3.9*t.^2 - 4.7*t.^3;
 y = @(t) 1.5 + 0.3*t + 0.9*t.^2 - 2.7*t.^3;
@@ -16,9 +15,9 @@ tPlot = linspace(0, 1, 1000);
 xFerill = x(tPlot);
 yFerill = y(tPlot);
 
-% Hreyfing með jofnum skrefum i t
+% Hreyfing med jofnum skrefum i t
 tGildi = linspace(0, 1, fjoldiRamma);
-titlar1 = arrayfun(@(t) sprintf('Upprunalegar breytur: t = %.3f', t), ...
+titlar1 = arrayfun(@(t) sprintf('Jofn skref i t: t = %.3f', t), ...
                    tGildi, 'UniformOutput', false);
 
 hreyfaFeril(xFerill, yFerill, x(tGildi), y(tGildi), 'r', titlar1);
@@ -29,7 +28,7 @@ pause(1);
 [xJafnt, yJafnt] = finnaStadsetningar(x, y, hradi, L, fjoldiRamma, quadTol);
 
 sGildi = linspace(0, 1, fjoldiRamma);
-titlar2 = arrayfun(@(s) sprintf('Jafnur hraði: s = %.3f', s), ...
+titlar2 = arrayfun(@(s) sprintf('Jafnar bogalengdir: s = %.3f', s), ...
                    sGildi, 'UniformOutput', false);
 
 hreyfaFeril(xFerill, yFerill, xJafnt, yJafnt, 'g', titlar2);
@@ -85,9 +84,9 @@ end
 function I = adaptQuad(f, a, b, tol)
     c = (a + b)/2;
 
-    heilt = (b - a)*(f(a) + f(b))/2;
-    vinstri = (c - a)*(f(a) + f(c))/2;
-    haegri = (b - c)*(f(c) + f(b))/2;
+    heilt = (b - a) * (f(a) + f(b)) / 2;
+    vinstri = (c - a) * (f(a) + f(c)) / 2;
+    haegri = (b - c) * (f(c) + f(b)) / 2;
 
     if abs(heilt - (vinstri + haegri)) < 3*tol
         I = vinstri + haegri;
@@ -103,6 +102,6 @@ function root = Newton(f, df, x0, TOL)
         if abs(f(root)) <= TOL
             return;
         end
-        root = root - f(root)/df(root);
+        root = root - f(root) / df(root);
     end
 end
