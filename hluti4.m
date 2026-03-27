@@ -1,3 +1,4 @@
+%Hluti 4
 clear; clc; close all;
 
 x = @(t) 0.5 + 0.3*t + 3.9*t.^2 - 4.7*t.^3;
@@ -26,69 +27,56 @@ timiNewton2 = toc(klukka);
 
 fprintf('t* = %.3f\n', tStjarna);
 fprintf('Keyrslutími fyrir lið 2 með Newton = %.6f s\n', timiNewton2);
+%% n = 4
+timiNewton_n4 = keyraNewton(4, hradi, L, quadTol, newtonTol, x, y);
 
-% Liður 3 með Newton, n = 4
-n = 4;
-klukka = tic;
-sGildi = linspace(0, 1, n+1);
-tGildi = arrayfun(@(s) Newton(@(t) adaptQuad(hradi, 0, t, quadTol) - s*L, ...
-                              @(t) hradi(t), ...
-                              s, ...
-                              newtonTol), sGildi);
-timiNewton_n4 = toc(klukka);
-
-xPunktar = x(tGildi);
-yPunktar = y(tGildi);
-
-figure;
-tPlot = linspace(0, 1, 1000);
-plot(x(tPlot), y(tPlot), 'b-', 'LineWidth', 1.5);
-hold on;
-plot(xPunktar, yPunktar, 'ro', 'MarkerSize', 6, 'MarkerFaceColor', 'r');
-for k = 1:n
-    plot(xPunktar(k:k+1), yPunktar(k:k+1), 'r-');
-end
-for k = 1:n+1
-    text(xPunktar(k), yPunktar(k), sprintf('  %d', k-1), 'FontSize', 9);
-end
-axis equal;
-grid on;
-xlabel('x(t)');
-ylabel('y(t)');
-title('Ferillinn skiptur í 4 jafnlanga búta með Newton aðferðinni');
-hold off;
-
-% Liður 3 með Newton, n = 20
-n = 20;
-klukka = tic;
-sGildi = linspace(0, 1, n+1);
-tGildi = arrayfun(@(s) Newton(@(t) adaptQuad(hradi, 0, t, quadTol) - s*L, ...
-                              @(t) hradi(t), ...
-                              s, ...
-                              newtonTol), sGildi);
-timiNewton_n20 = toc(klukka);
-
-xPunktar = x(tGildi);
-yPunktar = y(tGildi);
-
-figure;
-plot(x(tPlot), y(tPlot), 'b-', 'LineWidth', 1.5);
-hold on;
-plot(xPunktar, yPunktar, 'ro', 'MarkerSize', 6, 'MarkerFaceColor', 'r');
-for k = 1:n
-    plot(xPunktar(k:k+1), yPunktar(k:k+1), 'r-');
-end
-axis equal;
-grid on;
-xlabel('x(t)');
-ylabel('y(t)');
-title('Ferillinn skiptur í 20 jafnlanga búta með Newton aðferðinni');
-hold off;
+%% n = 20
+timiNewton_n20 = keyraNewton(20, hradi, L, quadTol, newtonTol, x, y);
 
 fprintf('Liður 2 með Newton = %.6f s\n', timiNewton2);
 fprintf('Liður 3 fyrir n = 4 með Newton = %.6f s\n', timiNewton_n4);
 fprintf('Liður 3 fyrir n = 20 með Newton = %.6f s\n', timiNewton_n20);
 
+
+function timiNewton = keyraNewton(n, hradi, L, quadTol, newtonTol, x, y)
+
+    klukka = tic;
+    sGildi = linspace(0, 1, n+1);
+
+    tGildi = arrayfun(@(s) Newton( ...
+        @(t) adaptQuad(hradi, 0, t, quadTol) - s*L, ...
+        @(t) hradi(t), ...
+        s, ...
+        newtonTol), sGildi);
+
+    timiNewton = toc(klukka);
+
+    xPunktar = x(tGildi);
+    yPunktar = y(tGildi);
+
+    tPlot = linspace(0, 1, 1000);
+
+    figure;
+    plot(x(tPlot), y(tPlot), 'b-', 'LineWidth', 1.5);
+    hold on;
+    plot(xPunktar, yPunktar, 'ro', 'MarkerSize', 6, 'MarkerFaceColor', 'r');
+
+    for k = 1:n
+        plot(xPunktar(k:k+1), yPunktar(k:k+1), 'r-');
+    end
+
+    for k = 1:n+1
+        text(xPunktar(k), yPunktar(k), sprintf('  %d', k-1), 'FontSize', 9);
+    end
+
+    axis equal;
+    grid on;
+    xlabel('x(t)');
+    ylabel('y(t)');
+    title(sprintf('Ferillinn skiptur í %d jafnlanga búta með Newton aðferðinni', n));
+    hold off;
+
+end
 
 function root = Newton(f, df, x0, TOL)
     root = x0;
