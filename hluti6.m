@@ -1,34 +1,28 @@
-% Hluti 6 
 clear; clc;
 disp('');
-disp('Lidur 6:');
+disp('Hluti 6:');
 disp('');
 
-% Styripunktar fyrir Bezier-feril
 P0 = [0,  0];
 P1 = [1,  3];
 P2 = [3, -2];
 P3 = [4,  1];
 
-% Skilgreina ferilinn og hrada hans
 [x, y, hradi] = bezierFerill(P0, P1, P2, P3);
 
-% Vikmork
 quadTol   = 1e-8;
 newtonTol = 1e-8;
 
-% Heildarbogalengd
 L = adaptQuad(hradi, 0, 1, quadTol);
 fprintf('Heildar bogalengd: %.6f\n\n', L);
 
-% Skipta ferlinum i jafnlanga buta
-teiknaJafnskiptingu(x, y, hradi, L, 6,  ...
+teiknaJafnskiptingu(x, y, hradi, L, 6, ...
     'Bezier-ferill: 6 jafnlangir butar', quadTol, newtonTol);
 
 teiknaJafnskiptingu(x, y, hradi, L, 20, ...
     'Bezier-ferill: 20 jafnlangir butar', quadTol, newtonTol);
 
-% Hreyfimynd med jofnum skrefum i t
+% Hreyfimynd
 fjoldiRamma = 200;
 tPlot = linspace(0, 1, 1000);
 xFerill = x(tPlot);
@@ -37,18 +31,14 @@ yFerill = y(tPlot);
 tGildi = linspace(0, 1, fjoldiRamma);
 titlar1 = arrayfun(@(t) sprintf('Upprunalegar breytur: t = %.3f', t), ...
                    tGildi, 'UniformOutput', false);
-
 hreyfaFeril(xFerill, yFerill, x(tGildi), y(tGildi), 'r', titlar1);
 
 pause(1);
 
-% Hreyfimynd med jofnum skrefum i bogalengd
 [xJafnt, yJafnt] = finnaStadsetningar(x, y, hradi, L, fjoldiRamma, quadTol);
-
 sGildi = linspace(0, 1, fjoldiRamma);
 titlar2 = arrayfun(@(s) sprintf('Jafnar bogalengdir: s = %.3f', s), ...
                    sGildi, 'UniformOutput', false);
-
 hreyfaFeril(xFerill, yFerill, xJafnt, yJafnt, 'g', titlar2);
 
 
@@ -105,6 +95,17 @@ function teiknaJafnskiptingu(x, y, hradi, L, n, titill, quadTol, newtonTol)
     ylabel('y');
     title(titill);
     hold off;
+end
+
+
+function tGildi = jafnskipting(hradi, L, n, quadTol, newtonTol)
+    sGildi = linspace(0, 1, n+1);
+
+    tGildi = arrayfun(@(s) Newton( ...
+        @(t) adaptQuad(hradi, 0, t, quadTol) - s*L, ...
+        @(t) hradi(t), ...
+        s, ...
+        newtonTol), sGildi);
 end
 
 
@@ -167,17 +168,6 @@ function I = adaptQuad(f, a, b, tol)
     else
         I = adaptQuad(f, a, c, tol/2) + adaptQuad(f, c, b, tol/2);
     end
-end
-
-
-function tGildi = jafnskipting(hradi, L, n, quadTol, newtonTol)
-    sGildi = linspace(0, 1, n+1);
-
-    tGildi = arrayfun(@(s) Newton( ...
-        @(t) adaptQuad(hradi, 0, t, quadTol) - s*L, ...
-        @(t) hradi(t), ...
-        s, ...
-        newtonTol), sGildi);
 end
 
 
