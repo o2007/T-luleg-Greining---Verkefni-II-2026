@@ -1,31 +1,24 @@
-% Hluti 7 
 clear; clc;
 disp('');
-disp('Lidur 7:');
+disp('Hluti 7:');
 disp('');
 
-% Ferillinn
 x = @(t) 0.5 + 0.3*t + 3.9*t.^2 - 4.7*t.^3;
 y = @(t) 1.5 + 0.3*t + 0.9*t.^2 - 2.7*t.^3;
 
-% Hradi ferilsins
 hradi = @(t) sqrt((0.3 + 7.8*t - 14.1*t.^2).^2 + ...
                   (0.3 + 1.8*t - 8.1*t.^2).^2);
 
-% Vikmork og fjoldi ramma
 quadTol = 1e-8;
 fjoldiRamma = 200;
 
-% Heildarbogalengd
 L = adaptQuad(hradi, 0, 1, quadTol);
 
-% Punktar til ad teikna ferilinn
 tPlot = linspace(0, 1, 1000);
 xFerill = x(tPlot);
 yFerill = y(tPlot);
 sGildi = linspace(0, 1, fjoldiRamma);
 
-% Stodufoll C(s) og nofn þeirra
 stodufoll = {
     @(s) s,                            'C(s) = s (jafn hradi)';
     @(s) s.^(1/3),                     'C(s) = s^(1/3)';
@@ -34,7 +27,6 @@ stodufoll = {
     @(s) 0.5 + 0.5*sin((2*s-1)*pi/2), 'C(s) = ease-in-out'
 };
 
-% Keyra hreyfimynd fyrir hvert stodufall
 for i = 1:size(stodufoll, 1)
     C = stodufoll{i, 1};
     nafn = stodufoll{i, 2};
