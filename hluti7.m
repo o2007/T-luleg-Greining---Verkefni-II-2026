@@ -93,3 +93,12 @@ function animateFerill(xFull, yFull, xBall, yBall, litur, titill)
         pause(0.01);
     end
 end
+function root = Newton(f, df, x0, TOL)
+    root = x0;
+    for i = 1:100
+        if abs(f(root)) <= TOL
+            return;
+        end
+        root = root - f(root)/df(root);
+    end
+end
