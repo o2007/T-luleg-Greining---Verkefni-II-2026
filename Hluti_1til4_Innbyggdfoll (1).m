@@ -8,7 +8,7 @@ y = @(t) 1.5 + 0.3*t + 0.9*t.^2 - 2.7*t.^3;
 hradi = @(t) sqrt((0.3 + 7.8*t - 14.1*t.^2).^2 + ...
                   (0.3 + 1.8*t - 8.1*t.^2).^2);
 
-% Vikmörk
+% Vikmork
 T = 1;
 quadTol = 1e-8;
 bisectTol = 1e-8;
@@ -39,8 +39,8 @@ disp('');
 disp('Hluti 3:');
 disp('');
 
-timiBisect3_n4 = hluti3Bisect(4, hradi, L, quadTol, bisectTol, x, y);
-timiBisect3_n20 = hluti3Bisect(20, hradi, L, quadTol, bisectTol, x, y);
+timiBisect3_n4 = keyraFyrirN(4, hradi, L, quadTol, bisectTol, x, y);
+timiBisect3_n20 = keyraFyrirN(20, hradi, L, quadTol, bisectTol, x, y);
 
 %% Hluti 4
 disp('');
@@ -121,7 +121,7 @@ function root = Newton(f, df, x0, TOL)
 end
 
 
-function timiBisect = hluti3Bisect(n, hradi, L, quadTol, bisectTol, x, y)
+function timiBisect = keyraFyrirN(n, hradi, L, quadTol, bisectTol, x, y)
 
     klukka = tic;
     sGildi = linspace(0, 1, n+1);
