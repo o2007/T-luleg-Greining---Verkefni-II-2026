@@ -113,5 +113,31 @@ function [xBall, yBall, tStars] = progressPositions(x, y, hradi, L, C, nFrames, 
     xBall = x(tStars);
     yBall = y(tStars);
 end
+function I = adaptQuad(f,a,b,tol)
+    c = (a+b)/2;
 
+    allt = (b-a)*(f(a)+f(b))/2;
+    vinstri  = (c-a)*(f(a)+f(c))/2;
+    haegri = (b-c)*(f(c)+f(b))/2;
+
+    if abs(allt - (vinstri + haegri)) < 3*tol
+        I = vinstri + haegri;
+    else
+        I = adaptQuad(f,a,c,tol/2) + adaptQuad(f,c,b,tol/2);
+    end
+end
+function tGildi = equipartition(hradi, L, n, quadTol, newtonTol)
+    sGildi = linspace(0, 1, n+1);
+    tGildi = arrayfun(@(s) Newton(@(t) adaptQuad(hradi, 0, t, quadTol) - s*L, ...
+                                  @(t) hradi(t), s, newtonTol), sGildi);
+end
+function root = Newton(f, df, x0, TOL)
+    root = x0;
+    for i = 1:100
+        if abs(f(root)) <= TOL
+            return;
+        end
+        root = root - f(root)/df(root);
+    end
+end
 
